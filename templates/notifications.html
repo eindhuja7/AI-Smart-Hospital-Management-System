@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        /* ================= HEADER ================= */
+
+        .notification-page-header {
+            background: white;
+            padding: 20px 35px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+
+            border-radius: 13px;
+
+            background: #2563eb;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 25px;
+        }
+
+        .header-brand h1 {
+            margin: 0;
+            font-size: 23px;
+            color: #1e3a8a;
+        }
+
+        .header-brand p {
+            margin: 4px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* ================= HEADER BUTTON ================= */
+
+        .dashboard-link {
+            text-decoration: none;
+
+            padding: 11px 18px;
+
+            background: #eff6ff;
+            color: #2563eb;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+        .dashboard-link:hover {
+            background: #dbeafe;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .notifications-container {
+            max-width: 950px;
+
+            margin: 40px auto;
+
+            padding: 0 25px;
+        }
+
+
+        /* ================= TITLE CARD ================= */
+
+        .notification-intro {
+            background: white;
+
+            padding: 25px 30px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 6px 25px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 22px;
+        }
+
+        .intro-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .intro-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .intro-title-icon {
+            width: 50px;
+            height: 50px;
+
+            border-radius: 12px;
+
+            background: #fef3c7;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 25px;
+        }
+
+        .intro-title h2 {
+            margin: 0;
+
+            font-size: 22px;
+
+            color: #1e293b;
+        }
+
+        .intro-title p {
+            margin: 5px 0 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= COUNT ================= */
+
+        .notification-count {
+            padding: 10px 15px;
+
+            background: #fee2e2;
+
+            color: #dc2626;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* ================= ACTIONS ================= */
+
+        .notification-actions {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-top: 22px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .notification-actions span {
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        .clear-button {
+            text-decoration: none;
+
+            padding: 9px 14px;
+
+            border-radius: 8px;
+
+            background: #fef2f2;
+
+            color: #dc2626;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .clear-button:hover {
+            background: #fee2e2;
+        }
+
+
+        /* ================= NOTIFICATION CARD ================= */
+
+        .notification-list {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 13px;
+        }
+
+        .notification-card {
+            background: white;
+
+            padding: 19px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 4px 18px rgba(0, 0, 0, 0.06);
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            border-left: 5px solid #2563eb;
+
+            transition: 0.2s;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 22px rgba(0, 0, 0, 0.10);
+        }
+
+
+        /* ================= ICON ================= */
+
+        .notification-icon {
+            min-width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 23px;
+        }
+
+
+        /* ================= CONTENT ================= */
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .notification-content strong {
+            color: #1e293b;
+
+            font-size: 15px;
+        }
+
+        .notification-time {
+            color: #94a3b8;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+        }
+
+        .notification-content p {
+            margin: 7px 0 0;
+
+            color: #475569;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ================= NOTIFICATION TYPES ================= */
+
+        .notification-success {
+            border-left-color: #22c55e;
+        }
+
+        .notification-success .notification-icon {
+            background: #dcfce7;
+        }
+
+        .notification-warning {
+            border-left-color: #f59e0b;
+        }
+
+        .notification-warning .notification-icon {
+            background: #fef3c7;
+        }
+
+        .notification-info {
+            border-left-color: #3b82f6;
+        }
+
+        .notification-info .notification-icon {
+            background: #dbeafe;
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty-notification {
+            background: white;
+
+            padding: 65px 25px;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            box-shadow:
+                0 6px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+
+            margin-bottom: 15px;
+        }
+
+        .empty-notification h2 {
+            margin: 0;
+
+            color: #334155;
+        }
+
+        .empty-notification p {
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin-top: 8px;
+        }
+
+
+        /* ================= BOTTOM NAVIGATION ================= */
+
+        .bottom-navigation {
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        .nav-button {
+            text-decoration: none;
+
+            padding: 12px 19px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .patients-button {
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+        .doctors-button {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .appointments-button {
+            background: #fef3c7;
+
+            color: #a16207;
+        }
+
+        .home-button {
+            background: #e2e8f0;
+
+            color: #334155;
+        }
+
+        .nav-button:hover {
+            opacity: 0.85;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .page-footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 650px) {
+
+            .notification-page-header {
+                padding: 16px 18px;
+            }
+
+            .header-brand h1 {
+                font-size: 19px;
+            }
+
+            .header-brand p {
+                display: none;
+            }
+
+            .dashboard-link {
+                padding: 9px 12px;
+            }
+
+            .notifications-container {
+                margin: 25px auto;
+
+                padding: 0 15px;
+            }
+
+            .notification-intro {
+                padding: 20px;
+            }
+
+            .intro-top {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            .notification-count {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .notification-actions {
+                align-items: flex-start;
+
+                gap: 12px;
+
+                flex-direction: column;
+            }
+
+            .notification-card {
+                padding: 15px;
+            }
+
+            .notification-top {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            .notification-time {
+                margin-top: 3px;
+            }
+
+            .bottom-navigation {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!--                     HEADER                        -->
+<!-- ================================================= -->
+
+<header class="notification-page-header">
+
+    <div class="header-brand">
+
+        <div class="header-icon">
+            🏥
+        </div>
+
+        <div>
+
+            <h1>
+                Smart Hospital
+            </h1>
+
+            <p>
+                Hospital Management System
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <a href="/"
+       class="dashboard-link">
+
+        🏠 Dashboard
+
+    </a>
+
+</header>
+
+
+
+<!-- ================================================= -->
+<!--                     MAIN                          -->
+<!-- ================================================= -->
+
+<main class="notifications-container">
+
+
+    <!-- ================= INTRO ================= -->
+
+    <div class="notification-intro">
+
+
+        <div class="intro-top">
+
+
+            <div class="intro-title">
+
+                <div class="intro-title-icon">
+                    🔔
+                </div>
+
+                <div>
+
+                    <h2>
+                        All Notifications
+                    </h2>
+
+                    <p>
+                        Stay updated with important hospital activities
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if notifications %}
+
+            <div class="notification-count">
+
+                🔴 {{ notifications|length }}
+                Notification{{ 's' if notifications|length != 1 else '' }}
+
+            </div>
+
+            {% else %}
+
+            <div class="notification-count"
+                 style="background:#dcfce7; color:#15803d;">
+
+                ✓ All Clear
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================= ACTIONS ================= -->
+
+        <div class="notification-actions">
+
+            <span>
+                📢 Hospital activity updates
+            </span>
+
+
+            {% if notifications %}
+
+            <a href="#"
+               class="clear-button"
+               onclick="clearNotifications(event)">
+
+                ✓ Mark All as Read
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!--                 NOTIFICATION LIST                -->
+    <!-- ================================================= -->
+
+    {% if notifications %}
+
+    <div class="notification-list"
+         id="notificationList">
+
+
+        {% for notification in notifications %}
+
+
+        <div class="notification-card
+
+            {% if notification.type == 'success' %}
+                notification-success
+            {% elif notification.type == 'warning' %}
+                notification-warning
+            {% else %}
+                notification-info
+            {% endif %}
+
+        ">
+
+
+            <!-- ICON -->
+
+            <div class="notification-icon">
+
+                {{ notification.icon }}
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="notification-content">
+
+
+                <div class="notification-top">
+
+                    <strong>
+
+                        {% if notification.type == 'success' %}
+
+                            Hospital Update
+
+                        {% elif notification.type == 'warning' %}
+
+                            Important Alert
+
+                        {% else %}
+
+                            Hospital Information
+
+                        {% endif %}
+
+                    </strong>
+
+
+                    <span class="notification-time">
+
+                        🔔 New
+
+                    </span>
+
+                </div>
+
+
+                <p>
+
+                    {{ notification.message }}
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- ================= EMPTY STATE ================= -->
+
+    <div class="empty-notification">
+
+        <div class="empty-icon">
+            🎉
+        </div>
+
+        <h2>
+            No New Notifications
+        </h2>
+
+        <p>
+            You're all caught up!
+            New hospital updates will appear here.
+        </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+
+    <!-- ================================================= -->
+    <!--                BOTTOM NAVIGATION                 -->
+    <!-- ================================================= -->
+
+    <div class="bottom-navigation">
+
+
+        <a href="{{ url_for('patients') }}"
+           class="nav-button patients-button">
+
+            👥 Patients
+
+        </a>
+
+
+        <a href="{{ url_for('doctors') }}"
+           class="nav-button doctors-button">
+
+            👨‍⚕️ Doctors
+
+        </a>
+
+
+        <a href="{{ url_for('appointments') }}"
+           class="nav-button appointments-button">
+
+            📅 Appointments
+
+        </a>
+
+
+        <a href="/"
+           class="nav-button home-button">
+
+            🏠 Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- ================================================= -->
+<!--                     FOOTER                        -->
+<!-- ================================================= -->
+
+<footer class="page-footer">
+
+    🏥 Smart Hospital Management System
+
+    <br><br>
+
+    AI-Based Healthcare Management Platform
+
+    <br><br>
+
+    © 2026 Smart Hospital
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================================
+   MARK ALL NOTIFICATIONS AS READ
+========================================= */
+
+function clearNotifications(event) {
+
+    event.preventDefault();
+
+
+    const list =
+        document.getElementById(
+            "notificationList"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    list.innerHTML = `
+
+        <div class="empty-notification">
+
+            <div class="empty-icon">
+                🎉
+            </div>
+
+            <h2>
+                No New Notifications
+            </h2>
+
+            <p>
+                You're all caught up!
+                New hospital updates will appear here.
+            </p>
+
+        </div>
+
+    `;
+
+
+    const count =
+        document.querySelector(
+            ".notification-count"
+        );
+
+
+    if (count) {
+
+        count.innerHTML =
+            "✓ All Clear";
+
+        count.style.background =
+            "#dcfce7";
+
+        count.style.color =
+            "#15803d";
+
+    }
+
+
+    const action =
+        document.querySelector(
+            ".notification-actions"
+        );
+
+
+    if (action) {
+
+        action.innerHTML = `
+
+            <span>
+                ✓ All notifications have been read
+            </span>
+
+        `;
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

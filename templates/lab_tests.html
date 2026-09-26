@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lab Tests - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header>
+
+    <h1>🧪 Laboratory Management</h1>
+
+    <nav>
+        <a href="{{ url_for('home') }}">Dashboard</a>
+        <a href="{{ url_for('patient') }}">Patients</a>
+        <a href="{{ url_for('doctor') }}">Doctors</a>
+        <a href="{{ url_for('appointment') }}">Appointments</a>
+        <a href="{{ url_for('lab_test_list') }}">Lab Results</a>
+    </nav>
+
+</header>
+
+
+<div class="form-card">
+
+    <h1>🧪 Add Laboratory Test</h1>
+
+    <p>
+        Enter patient laboratory test details
+    </p>
+
+
+    <form method="POST">
+
+        <div class="form-grid">
+
+            <!-- Patient -->
+
+            <div class="form-group">
+
+                <label for="patient_id">
+                    Select Patient
+                </label>
+
+                <select
+                    name="patient_id"
+                    id="patient_id"
+                    required>
+
+                    <option value="">
+                        -- Select Patient --
+                    </option>
+
+                    {% for patient in patients %}
+
+                    <option value="{{ patient.patient_id }}">
+                        {{ patient.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- Test Name -->
+
+            <div class="form-group">
+
+                <label for="test_name">
+                    Laboratory Test
+                </label>
+
+                <select
+                    name="test_name"
+                    id="test_name"
+                    required>
+
+                    <option value="">
+                        -- Select Test --
+                    </option>
+
+                    <option value="Blood Test">
+                        Blood Test
+                    </option>
+
+                    <option value="Complete Blood Count (CBC)">
+                        Complete Blood Count (CBC)
+                    </option>
+
+                    <option value="Blood Sugar">
+                        Blood Sugar
+                    </option>
+
+                    <option value="Urine Test">
+                        Urine Test
+                    </option>
+
+                    <option value="Lipid Profile">
+                        Lipid Profile
+                    </option>
+
+                    <option value="Liver Function Test">
+                        Liver Function Test
+                    </option>
+
+                    <option value="Kidney Function Test">
+                        Kidney Function Test
+                    </option>
+
+                    <option value="Thyroid Test">
+                        Thyroid Test
+                    </option>
+
+                    <option value="X-Ray">
+                        X-Ray
+                    </option>
+
+                    <option value="ECG">
+                        ECG
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Date -->
+
+            <div class="form-group">
+
+                <label for="test_date">
+                    Test Date
+                </label>
+
+                <input
+                    type="date"
+                    id="test_date"
+                    name="test_date"
+                    required>
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Test Status
+                </label>
+
+                <select
+                    name="status"
+                    id="status"
+                    required>
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Result -->
+
+            <div class="form-group full">
+
+                <label for="result">
+                    Test Result
+                </label>
+
+                <textarea
+                    id="result"
+                    name="result"
+                    placeholder="Enter laboratory test result..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            margin-top:25px;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        ">
+
+            <button type="submit">
+                🧪 Save Lab Test
+            </button>
+
+            <a href="{{ url_for('lab_test_list') }}"
+               class="btn btn-secondary">
+
+                📋 View Lab Results
+
+            </a>
+
+            <a href="{{ url_for('home') }}"
+               class="btn btn-secondary">
+
+                ← Dashboard
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    // Automatically set today's date
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const dateInput =
+            document.getElementById("test_date");
+
+        if (dateInput && !dateInput.value) {
+
+            const today =
+                new Date().toISOString().split("T")[0];
+
+            dateInput.value = today;
+
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>

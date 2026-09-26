@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lab Results - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>📋 Laboratory Test Results</h1>
+
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('patient') }}">
+            Patients
+        </a>
+
+        <a href="{{ url_for('doctor') }}">
+            Doctors
+        </a>
+
+        <a href="{{ url_for('appointment') }}">
+            Appointments
+        </a>
+
+        <a href="{{ url_for('lab_tests') }}">
+            Add Lab Test
+        </a>
+
+    </nav>
+
+</header>
+
+
+<div class="container">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:10px;
+        margin-bottom:20px;
+    ">
+
+        <div>
+
+            <h2>
+                Laboratory Results
+            </h2>
+
+            <p>
+                View all patient laboratory test records.
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('lab_tests') }}"
+           class="btn">
+
+            + Add New Test
+
+        </a>
+
+    </div>
+
+
+    {% if tests %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Patient</th>
+
+                    <th>Test</th>
+
+                    <th>Date</th>
+
+                    <th>Result</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for test in tests %}
+
+                <tr>
+
+                    <td>
+                        #{{ test.test_id }}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ test.patient_name }}
+                        </strong>
+
+                    </td>
+
+
+                    <td>
+                        {{ test.test_name }}
+                    </td>
+
+
+                    <td>
+                        {{ test.test_date }}
+                    </td>
+
+
+                    <td>
+
+                        {% if test.result %}
+
+                            {{ test.result }}
+
+                        {% else %}
+
+                            <span style="color:#94a3b8;">
+                                Result not available
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if test.status == "Completed" %}
+
+                            <span class="status status-success">
+                                ✓ Completed
+                            </span>
+
+                        {% elif test.status == "Pending" %}
+
+                            <span class="status status-warning">
+                                ⏳ Pending
+                            </span>
+
+                        {% else %}
+
+                            <span class="status status-info">
+                                {{ test.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="notification-section"
+         style="text-align:center;">
+
+        <div style="font-size:45px;">
+            🧪
+        </div>
+
+        <h2>
+            No Laboratory Tests Found
+        </h2>
+
+        <p>
+            Laboratory test records will appear here
+            after you add them.
+        </p>
+
+        <a href="{{ url_for('lab_tests') }}"
+           class="btn">
+
+            Add First Lab Test
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+    <div style="
+        text-align:center;
+        margin-top:30px;
+    ">
+
+        <a href="{{ url_for('home') }}"
+           class="btn btn-secondary">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

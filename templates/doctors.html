@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Doctors List - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .doctors-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+        /* Header */
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .doctor-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 28px;
+        }
+
+        .page-title p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Doctor count */
+
+        .doctor-count {
+            background: #eff6ff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .doctor-count-number {
+            display: block;
+            font-size: 25px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .doctor-count-label {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* Search */
+
+        .search-box {
+            margin-top: 25px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 18px 14px 45px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 17px;
+            top: 13px;
+            font-size: 18px;
+        }
+
+        /* Table card */
+
+        .table-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 16px 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .doctor-id {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .doctor-name {
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        /* Badges */
+
+        .specialization-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #ede9fe;
+            color: #6d28d9;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .available-badge {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .phone-text {
+            white-space: nowrap;
+        }
+
+        .email-text {
+            color: #2563eb;
+        }
+
+        /* Empty */
+
+        .empty-box {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty-box h2 {
+            margin: 0;
+            color: #334155;
+        }
+
+        .empty-box p {
+            color: #64748b;
+            margin: 10px 0 25px;
+        }
+
+        /* Buttons */
+
+        .button-area {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .register-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .register-button:hover {
+            background: #1d4ed8;
+        }
+
+        .home-button {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .home-button:hover {
+            background: #cbd5e1;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+
+            .doctors-container {
+                margin: 20px;
+                padding: 0;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .doctor-count {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .page-title h1 {
+                font-size: 23px;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="doctors-container">
+
+
+    <!-- Header -->
+
+    <div class="page-header">
+
+        <div class="header-top">
+
+            <div class="page-title">
+
+                <div class="doctor-icon">
+                    👨‍⚕️
+                </div>
+
+                <div>
+
+                    <h1>Registered Doctors</h1>
+
+                    <p>
+                        Manage and view all doctors in the hospital
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="doctor-count">
+
+                <span class="doctor-count-number">
+                    {{ doctors|length }}
+                </span>
+
+                <span class="doctor-count-label">
+                    Total Doctors
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Search -->
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="doctorSearch"
+                placeholder="Search doctor, specialization, phone or email..."
+                onkeyup="searchDoctors()"
+            >
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Doctors Table -->
+
+    <div class="table-card">
+
+        {% if doctors %}
+
+        <div class="table-wrapper">
+
+            <table id="doctorTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Doctor</th>
+
+                        <th>Specialization</th>
+
+                        <th>Phone</th>
+
+                        <th>Email</th>
+
+                        <th>Available Time</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for doctor in doctors %}
+
+                    <tr>
+
+                        <td>
+                            <span class="doctor-id">
+                                #{{ doctor.doctor_id }}
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            <span class="doctor-name">
+                                👨‍⚕️ Dr. {{ doctor.name }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="specialization-badge">
+
+                                {{ doctor.specialization }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="phone-text">
+                                📞 {{ doctor.phone }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if doctor.email %}
+
+                            <span class="email-text">
+                                📧 {{ doctor.email }}
+                            </span>
+
+                            {% else %}
+
+                            <span style="color:#94a3b8;">
+                                Not provided
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if doctor.available_time %}
+
+                            <span class="available-badge">
+
+                                🟢 {{ doctor.available_time }}
+
+                            </span>
+
+                            {% else %}
+
+                            <span style="color:#94a3b8;">
+                                Not available
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- No Search Result -->
+
+        <div id="noSearchResult"
+             style="display:none; text-align:center; padding:40px; color:#64748b;">
+
+            🔍 No doctors found matching your search.
+
+        </div>
+
+
+        {% else %}
+
+        <!-- Empty State -->
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+                👨‍⚕️
+            </div>
+
+            <h2>No Doctors Registered</h2>
+
+            <p>
+                There are currently no doctors in the hospital system.
+            </p>
+
+            <a href="{{ url_for('doctor') }}"
+               class="action-button register-button">
+
+                ➕ Register First Doctor
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- Bottom Buttons -->
+
+    <div class="button-area">
+
+        <a href="{{ url_for('doctor') }}"
+           class="action-button register-button">
+
+            ➕ Register Doctor
+
+        </a>
+
+
+        <a href="/"
+           class="action-button home-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+function searchDoctors() {
+
+    const input =
+        document.getElementById("doctorSearch");
+
+    const filter =
+        input.value.toLowerCase();
+
+    const table =
+        document.getElementById("doctorTable");
+
+    const noResult =
+        document.getElementById("noSearchResult");
+
+    if (!table) {
+        return;
+    }
+
+    const rows =
+        table.getElementsByTagName("tbody")[0]
+             .getElementsByTagName("tr");
+
+    let visibleRows = 0;
+
+
+    for (let i = 0; i < rows.length; i++) {
+
+        const rowText =
+            rows[i].innerText.toLowerCase();
+
+        if (rowText.includes(filter)) {
+
+            rows[i].style.display = "";
+
+            visibleRows++;
+
+        } else {
+
+            rows[i].style.display = "none";
+
+        }
+
+    }
+
+
+    if (visibleRows === 0 && filter !== "") {
+
+        noResult.style.display = "block";
+
+    } else {
+
+        noResult.style.display = "none";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

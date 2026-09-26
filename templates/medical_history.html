@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Medical History - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .history-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .history-header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .history-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 15px;
+
+            border-radius: 20px;
+
+            background: #dbeafe;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 38px;
+        }
+
+        .history-header h1 {
+            margin: 0;
+            color: #1e3a8a;
+            font-size: 28px;
+        }
+
+        .history-header p {
+            margin: 9px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+
+        /* ================= FORM CARD ================= */
+
+        .history-card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+
+            box-shadow:
+                0 7px 25px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 25px;
+
+            padding-bottom: 18px;
+
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .form-title h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .history-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-form label {
+            margin-top: 12px;
+            margin-bottom: 2px;
+
+            color: #334155;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+
+        .history-form input,
+        .history-form select,
+        .history-form textarea {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            font-size: 15px;
+
+            font-family: Arial, sans-serif;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        .history-form input:focus,
+        .history-form select:focus,
+        .history-form textarea:focus {
+
+            background: white;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(
+                    37,
+                    99,
+                    235,
+                    0.10
+                );
+        }
+
+
+        .history-form textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+
+        /* ================= FORM ROW ================= */
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        /* ================= PATIENT SELECT ================= */
+
+        .patient-select {
+            background: #eff6ff !important;
+
+            border-color: #93c5fd !important;
+
+            font-weight: 500;
+        }
+
+
+        /* ================= SAVE BUTTON ================= */
+
+        .save-button {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            box-shadow:
+                0 5px 15px rgba(
+                    37,
+                    99,
+                    235,
+                    0.20
+                );
+        }
+
+
+        .save-button:hover {
+
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* ================= INFORMATION ================= */
+
+        .info-box {
+
+            margin-top: 25px;
+
+            padding: 17px;
+
+            border-radius: 11px;
+
+            background: #eff6ff;
+
+            border-left: 5px solid #2563eb;
+
+            color: #475569;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        .warning-box {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #fff7ed;
+
+            border-left: 5px solid #f97316;
+
+            color: #7c2d12;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ================= NAVIGATION ================= */
+
+        .navigation {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 25px;
+        }
+
+
+        .nav-button {
+
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+
+        .dashboard-button {
+
+            background: #e2e8f0;
+
+            color: #1e293b;
+        }
+
+
+        .dashboard-button:hover {
+
+            background: #cbd5e1;
+        }
+
+
+        .patients-button {
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .patients-button:hover {
+
+            background: #bfdbfe;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 650px) {
+
+            .history-container {
+
+                margin: 20px;
+
+                padding: 0;
+            }
+
+
+            .history-header {
+
+                padding: 25px 20px;
+            }
+
+
+            .history-card {
+
+                padding: 22px;
+            }
+
+
+            .form-row {
+
+                grid-template-columns: 1fr;
+
+                gap: 0;
+            }
+
+
+            .history-header h1 {
+
+                font-size: 23px;
+            }
+
+
+            .navigation {
+
+                flex-direction: column;
+            }
+
+
+            .nav-button {
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="history-container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="history-header">
+
+        <div class="history-icon">
+            📋
+        </div>
+
+        <h1>
+            Patient Medical History
+        </h1>
+
+        <p>
+            Record and manage patient diagnosis,
+            treatment and medical information
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= FORM CARD ================= -->
+
+    <div class="history-card">
+
+
+        <div class="form-title">
+
+            <span style="font-size:25px;">
+                🩺
+            </span>
+
+            <h2>
+                Add Medical Record
+            </h2>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="history-form">
+
+
+            <!-- ================= PATIENT ================= -->
+
+            <label for="patient_id">
+
+                👤 Select Patient
+
+            </label>
+
+
+            <select
+                id="patient_id"
+                name="patient_id"
+                class="patient-select"
+                required>
+
+                <option value="">
+
+                    -- Select Patient --
+
+                </option>
+
+
+                {% for patient in patients %}
+
+                <option
+                    value="{{ patient.patient_id }}">
+
+                    #{{ patient.patient_id }}
+                    -
+                    {{ patient.name }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+
+
+            <!-- ================= DIAGNOSIS + DATE ================= -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="diagnosis">
+
+                        🩺 Diagnosis
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="diagnosis"
+                        name="diagnosis"
+                        placeholder="Example: Fever, Diabetes..."
+                        required>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="visit_date">
+
+                        📅 Visit Date
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="visit_date"
+                        name="visit_date"
+                        required>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================= TREATMENT ================= -->
+
+            <label for="treatment">
+
+                💊 Treatment
+
+            </label>
+
+
+            <input
+                type="text"
+                id="treatment"
+                name="treatment"
+                placeholder="Enter treatment or medication details">
+
+
+
+            <!-- ================= NOTES ================= -->
+
+            <label for="notes">
+
+                📝 Additional Notes
+
+            </label>
+
+
+            <textarea
+                id="notes"
+                name="notes"
+                placeholder="Enter additional medical notes, observations or instructions..."
+                rows="5"></textarea>
+
+
+
+            <!-- ================= SAVE ================= -->
+
+            <button
+                type="submit"
+                class="save-button">
+
+                💾 Save Medical History
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- ================= INFO ================= -->
+
+        <div class="info-box">
+
+            💡 <strong>Medical Record Tips</strong>
+
+            <br>
+
+            • Select the correct patient before saving.
+
+            <br>
+
+            • Enter the diagnosis clearly.
+
+            <br>
+
+            • Mention the treatment provided.
+
+            <br>
+
+            • Add important observations in the notes section.
+
+        </div>
+
+
+        <div class="warning-box">
+
+            ⚠️ <strong>Important:</strong>
+
+            Medical information should be entered
+            accurately and handled only by authorized
+            hospital staff.
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= NAVIGATION ================= -->
+
+    <div class="navigation">
+
+
+        <a
+            href="{{ url_for('patients') }}"
+            class="nav-button patients-button">
+
+            👥 View Patients
+
+        </a>
+
+
+        <a
+            href="/"
+            class="nav-button dashboard-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+    /* ================================
+       SET TODAY AS DEFAULT DATE
+    ================================= */
+
+    const dateInput =
+        document.getElementById("visit_date");
+
+    const today =
+        new Date();
+
+    const year =
+        today.getFullYear();
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    const currentDate =
+        `${year}-${month}-${day}`;
+
+
+    dateInput.value =
+        currentDate;
+
+
+    /* ================================
+       PREVENT FUTURE DATES
+    ================================= */
+
+    dateInput.setAttribute(
+        "max",
+        currentDate
+    );
+
+</script>
+
+
+</body>
+
+</html>

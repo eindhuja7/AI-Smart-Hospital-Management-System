@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doctor Registration - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .doctor-container {
+            max-width: 750px;
+            margin: 45px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .doctor-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .doctor-icon {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 38px;
+        }
+
+        .doctor-header h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #1e293b;
+        }
+
+        .doctor-header p {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .doctor-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .doctor-form label {
+            margin-top: 12px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .doctor-form input {
+            width: 100%;
+            padding: 13px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .doctor-form input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .doctor-form input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .register-button {
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .register-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .doctor-info {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .doctor-info strong {
+            color: #1e40af;
+        }
+
+        .button-area {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 650px) {
+
+            .doctor-container {
+                margin: 20px;
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .doctor-header h1 {
+                font-size: 25px;
+            }
+
+            .button-area {
+                flex-direction: column;
+            }
+
+            .back-button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="doctor-container">
+
+        <div class="doctor-header">
+
+            <div class="doctor-icon">
+                👨‍⚕️
+            </div>
+
+            <h1>Doctor Registration</h1>
+
+            <p>
+                Add a new doctor to the Smart Hospital system
+            </p>
+
+        </div>
+
+
+        <form method="POST" class="doctor-form">
+
+            <!-- Doctor Name + Specialization -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        👨‍⚕️ Doctor Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter doctor name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="specialization">
+                        🩺 Specialization
+                    </label>
+
+                    <input
+                        type="text"
+                        id="specialization"
+                        name="specialization"
+                        placeholder="Example: Cardiologist"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Phone + Email -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        📞 Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter phone number"
+                        pattern="[0-9]{10}"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        📧 Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="doctor@example.com"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Available Time -->
+
+            <label for="available_time">
+                ⏰ Available Time
+            </label>
+
+            <input
+                type="text"
+                id="available_time"
+                name="available_time"
+                placeholder="Example: 10:00 AM - 2:00 PM"
+                required
+            >
+
+
+            <!-- Information -->
+
+            <div class="doctor-info">
+
+                💡 <strong>Registration Tips</strong>
+
+                <br><br>
+
+                • Enter the doctor's full name.
+
+                <br>
+
+                • Enter the correct medical specialization.
+
+                <br>
+
+                • Phone number must contain 10 digits.
+
+                <br>
+
+                • Mention the doctor's available consultation time.
+
+            </div>
+
+
+            <!-- Register -->
+
+            <button
+                type="submit"
+                class="register-button">
+
+                ➕ Register Doctor
+
+            </button>
+
+        </form>
+
+
+        <!-- Navigation -->
+
+        <div class="button-area">
+
+            <a href="/doctors" class="back-button">
+                👨‍⚕️ View Doctors
+            </a>
+
+            <a href="/" class="back-button">
+                🏠 Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Allow only numbers in phone field
+
+        const phoneInput = document.getElementById("phone");
+
+        phoneInput.addEventListener("input", function () {
+
+            this.value = this.value.replace(/[^0-9]/g, "");
+
+        });
+
+    </script>
+
+</body>
+
+</html>

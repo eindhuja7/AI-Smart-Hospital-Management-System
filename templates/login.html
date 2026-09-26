@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Hospital - Admin Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background:
+                linear-gradient(
+                    135deg,
+                    #e0f2fe,
+                    #eff6ff,
+                    #f8fafc
+                );
+        }
+
+        /* ================= LOGIN PAGE ================= */
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
+
+        /* ================= LOGIN CARD ================= */
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+
+            box-shadow:
+                0 15px 45px rgba(15, 23, 42, 0.15);
+
+            text-align: center;
+        }
+
+
+        /* ================= HOSPITAL ICON ================= */
+
+        .login-icon {
+            width: 82px;
+            height: 82px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 22px;
+
+            background: #2563eb;
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 42px;
+
+            box-shadow:
+                0 8px 20px rgba(37, 99, 235, 0.25);
+        }
+
+
+        /* ================= TITLE ================= */
+
+        .login-box h1 {
+            margin: 0;
+
+            color: #1e3a8a;
+
+            font-size: 30px;
+        }
+
+
+        .login-subtitle {
+            margin-top: 8px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        .admin-title {
+            margin-top: 28px;
+            margin-bottom: 22px;
+
+            color: #1e293b;
+
+            font-size: 21px;
+        }
+
+
+        /* ================= ERROR ================= */
+
+        .login-error {
+            margin-bottom: 20px;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            background: #fee2e2;
+
+            border: 1px solid #fecaca;
+
+            color: #b91c1c;
+
+            font-size: 14px;
+
+            text-align: left;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .login-form {
+            text-align: left;
+        }
+
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================= INPUT ================= */
+
+        .input-wrapper {
+            position: relative;
+        }
+
+
+        .input-icon {
+            position: absolute;
+
+            left: 14px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+
+            pointer-events: none;
+        }
+
+
+        .login-input {
+            width: 100%;
+
+            padding: 14px 45px 14px 45px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 11px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.2s;
+
+            background: #f8fafc;
+        }
+
+
+        .login-input:focus {
+            background: white;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(
+                    37,
+                    99,
+                    235,
+                    0.10
+                );
+        }
+
+
+        .login-input::placeholder {
+            color: #94a3b8;
+        }
+
+
+        /* ================= PASSWORD SHOW BUTTON ================= */
+
+        .password-toggle {
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+            padding: 5px;
+        }
+
+
+        /* ================= LOGIN BUTTON ================= */
+
+        .login-button {
+            width: 100%;
+
+            margin-top: 8px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            box-shadow:
+                0 5px 15px rgba(
+                    37,
+                    99,
+                    235,
+                    0.20
+                );
+        }
+
+
+        .login-button:hover {
+            background: #1d4ed8;
+
+            transform: translateY(-1px);
+        }
+
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+
+        /* ================= SECURITY MESSAGE ================= */
+
+        .security-message {
+            margin-top: 22px;
+
+            padding: 13px;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            border-radius: 10px;
+
+            color: #166534;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .login-footer {
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #e2e8f0;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* ================= LOADING ================= */
+
+        .loading {
+            pointer-events: none;
+
+            opacity: 0.75;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 500px) {
+
+            .login-container {
+                padding: 15px;
+            }
+
+            .login-box {
+                padding: 30px 22px;
+
+                border-radius: 20px;
+            }
+
+            .login-icon {
+                width: 70px;
+                height: 70px;
+
+                font-size: 35px;
+            }
+
+            .login-box h1 {
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-container">
+
+
+    <div class="login-box">
+
+
+        <!-- ================= HOSPITAL ICON ================= -->
+
+        <div class="login-icon">
+            🏥
+        </div>
+
+
+        <!-- ================= TITLE ================= -->
+
+        <h1>
+            Smart Hospital
+        </h1>
+
+
+        <p class="login-subtitle">
+            AI-Based Hospital Management System
+        </p>
+
+
+        <h2 class="admin-title">
+            🔐 Admin Login
+        </h2>
+
+
+        <!-- ================= ERROR ================= -->
+
+        {% if error %}
+
+        <div class="login-error">
+
+            ❌
+            <strong>Login Failed</strong>
+
+            <br>
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================= LOGIN FORM ================= -->
+
+        <form
+            method="POST"
+            class="login-form"
+            onsubmit="showLoading()">
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    👤 Username
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="login-input"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    🔑 Password
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔑
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="login-input"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="passwordToggle"
+                        onclick="togglePassword()"
+                        aria-label="Show password">
+
+                        👁️
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-button"
+                id="loginButton">
+
+                🔐 Login to Dashboard
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ================= SECURITY ================= -->
+
+        <div class="security-message">
+
+            🛡️
+            <strong>Secure Admin Area</strong>
+
+            <br>
+
+            Only authorized users can access
+            the hospital management dashboard.
+
+        </div>
+
+
+        <!-- ================= FOOTER ================= -->
+
+        <p class="login-footer">
+
+            🏥 Smart Hospital Management System
+
+            <br><br>
+
+            AI-Based Healthcare Management Platform
+
+            <br><br>
+
+            © 2026 Smart Hospital
+
+        </p>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================================
+   SHOW / HIDE PASSWORD
+========================================= */
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    const toggle =
+        document.getElementById("passwordToggle");
+
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        toggle.textContent = "🙈";
+
+        toggle.setAttribute(
+            "aria-label",
+            "Hide password"
+        );
+
+    } else {
+
+        password.type = "password";
+
+        toggle.textContent = "👁️";
+
+        toggle.setAttribute(
+            "aria-label",
+            "Show password"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   LOGIN LOADING EFFECT
+========================================= */
+
+function showLoading() {
+
+    const button =
+        document.getElementById("loginButton");
+
+
+    button.classList.add("loading");
+
+    button.textContent =
+        "⏳ Signing in...";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

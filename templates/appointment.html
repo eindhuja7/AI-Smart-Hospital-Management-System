@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Book Appointment - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .appointment-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .appointment-container h1 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .appointment-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .appointment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .appointment-form label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .appointment-form select,
+        .appointment-form input,
+        .appointment-form textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .appointment-form select:focus,
+        .appointment-form input:focus,
+        .appointment-form textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .appointment-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .book-button {
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+        }
+
+        .book-button:hover {
+            background: #1d4ed8;
+        }
+
+        .appointment-note {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 25px auto 0;
+            padding: 12px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            background: #f1f5f9;
+            color: #111827;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+
+            .appointment-container {
+                width: 90%;
+                margin: 25px auto;
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="appointment-container">
+
+        <h1>📅 Book Appointment</h1>
+
+        <p class="appointment-subtitle">
+            Schedule a new patient appointment with a doctor
+        </p>
+
+
+        <form method="POST"
+              class="appointment-form">
+
+
+            <!-- PATIENT -->
+
+            <label for="patient_id">
+                👤 Select Patient
+            </label>
+
+            <select
+                id="patient_id"
+                name="patient_id"
+                required>
+
+                <option value="">
+                    -- Select Patient --
+                </option>
+
+                {% for patient in patients %}
+
+                <option value="{{ patient.patient_id }}">
+                    {{ patient.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <!-- DOCTOR -->
+
+            <label for="doctor_id">
+                👨‍⚕️ Select Doctor
+            </label>
+
+            <select
+                id="doctor_id"
+                name="doctor_id"
+                required>
+
+                <option value="">
+                    -- Select Doctor --
+                </option>
+
+                {% for doctor in doctors %}
+
+                <option value="{{ doctor.doctor_id }}">
+                    Dr. {{ doctor.name }} - {{ doctor.specialization }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <!-- DATE -->
+
+            <label for="appointment_date">
+                📅 Appointment Date
+            </label>
+
+            <input
+                type="date"
+                id="appointment_date"
+                name="appointment_date"
+                required
+            >
+
+
+            <!-- TIME -->
+
+            <label for="appointment_time">
+                ⏰ Appointment Time
+            </label>
+
+            <input
+                type="time"
+                id="appointment_time"
+                name="appointment_time"
+                required
+            >
+
+
+            <!-- REASON -->
+
+            <label for="reason">
+                📝 Reason for Appointment
+            </label>
+
+            <textarea
+                id="reason"
+                name="reason"
+                placeholder="Example: Fever, regular check-up, headache..."
+                required></textarea>
+
+
+            <!-- BOOK BUTTON -->
+
+            <button
+                type="submit"
+                class="book-button">
+
+                📅 Book Appointment
+
+            </button>
+
+        </form>
+
+
+        <!-- NOTE -->
+
+        <div class="appointment-note">
+
+            🔔 <strong>Reminder:</strong>
+
+            Please select the correct patient, doctor,
+            date and time before booking the appointment.
+
+        </div>
+
+
+        <!-- BACK BUTTON -->
+
+        <a href="{{ url_for('home') }}"
+           class="back-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+    </div>
+
+
+    <!-- PREVENT PAST DATE -->
+
+    <script>
+
+        const today = new Date();
+
+        const year = today.getFullYear();
+
+        const month = String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+        const day = String(
+            today.getDate()
+        ).padStart(2, "0");
+
+        const currentDate =
+            `${year}-${month}-${day}`;
+
+        document
+            .getElementById("appointment_date")
+            .setAttribute("min", currentDate);
+
+    </script>
+
+
+</body>
+
+</html>

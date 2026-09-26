@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Health Prediction - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .ai-container {
+            max-width: 750px;
+            margin: 50px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .ai-container h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .ai-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .ai-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ai-form label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .ai-form select,
+        .ai-form textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .ai-form textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .predict-button {
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            opacity: 0.9;
+        }
+
+        .prediction-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f5f9ff;
+            border: 1px solid #dbeafe;
+        }
+
+        .prediction-box h2 {
+            margin-top: 0;
+        }
+
+        .condition {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .precaution-box {
+            margin-top: 20px;
+            padding: 18px;
+            background: #fff8e1;
+            border-radius: 12px;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .warning {
+            margin-top: 20px;
+            padding: 12px;
+            background: #fff1f2;
+            border-radius: 10px;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        .home-button {
+            display: block;
+            margin: 25px auto 0;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .patient-info {
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="ai-container">
+
+        <h1>🩺 AI Health Prediction</h1>
+
+        <p class="ai-subtitle">
+            Enter patient symptoms for a basic health prediction
+        </p>
+
+
+        <!-- AI FORM -->
+
+        <form method="POST"
+              class="ai-form">
+
+
+            <!-- Patient -->
+
+            <label for="patient_id">
+                👤 Select Patient
+            </label>
+
+            <select
+                id="patient_id"
+                name="patient_id">
+
+                <option value="">
+                    -- Select Patient (Optional) --
+                </option>
+
+                {% for patient in patients %}
+
+                <option value="{{ patient.patient_id }}">
+                    {{ patient.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <!-- Symptoms -->
+
+            <label for="symptoms">
+                📝 Patient Symptoms
+            </label>
+
+            <textarea
+                id="symptoms"
+                name="symptoms"
+                placeholder="Example: fever, cough, headache"
+                required></textarea>
+
+
+            <!-- Button -->
+
+            <button
+                type="submit"
+                class="predict-button">
+
+                🔍 Predict Possible Condition
+
+            </button>
+
+        </form>
+
+
+        <!-- RESULT -->
+
+        {% if prediction %}
+
+        <div class="prediction-box">
+
+            <h2>
+                🧠 Prediction Result
+            </h2>
+
+
+            {% if selected_patient %}
+
+            <div class="patient-info">
+
+                <strong>Patient:</strong>
+
+                {{ selected_patient }}
+
+            </div>
+
+            {% endif %}
+
+
+            <p>
+                Based on the entered symptoms:
+            </p>
+
+
+            <div class="condition">
+
+                {{ prediction }}
+
+            </div>
+
+
+            <!-- Precautions -->
+
+            {% if prediction == "Flu / Viral Infection" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Get adequate rest, drink enough fluids,
+                    and monitor symptoms.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Fever / Infection" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Stay hydrated, get sufficient rest,
+                    and monitor body temperature.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Respiratory Infection" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Take adequate rest, stay hydrated,
+                    and avoid exposure to irritants.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Headache / Migraine" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Rest in a quiet environment,
+                    stay hydrated, and monitor symptoms.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Gastric Problem" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Stay hydrated and avoid foods that
+                    appear to worsen symptoms.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Common Cold" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Rest well, drink fluids, and monitor
+                    symptoms.
+                </p>
+
+            </div>
+
+
+            {% elif prediction == "Possible Throat Infection" %}
+
+            <div class="precaution-box">
+
+                <strong>💡 General Precautions</strong>
+
+                <p>
+                    Drink fluids, rest adequately,
+                    and monitor throat symptoms.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Warning -->
+
+            <div class="warning">
+
+                ⚠️ <strong>Important:</strong>
+
+                This is only a basic educational prediction.
+                It is not a medical diagnosis.
+
+                Please consult a qualified healthcare
+                professional for proper evaluation and treatment.
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- HOME -->
+
+        <a href="/">
+
+            <button
+                class="home-button"
+                type="button">
+
+                🏠 Back to Dashboard
+
+            </button>
+
+        </a>
+
+    </div>
+
+</body>
+
+</html>

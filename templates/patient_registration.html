@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Registration - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================= */
+
+        .patient-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .patient-header {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 7px 25px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 25px;
+        }
+
+
+        .patient-icon {
+            width: 78px;
+            height: 78px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 22px;
+
+            background: #dbeafe;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 40px;
+        }
+
+
+        .patient-header h1 {
+            margin: 0;
+
+            font-size: 29px;
+
+            color: #1e3a8a;
+        }
+
+
+        .patient-header p {
+            margin: 9px 0 0;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           FORM CARD
+        ========================================= */
+
+        .patient-card {
+            background: white;
+
+            padding: 32px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 7px 25px rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =========================================
+           FORM TITLE
+        ========================================= */
+
+        .form-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding-bottom: 18px;
+
+            margin-bottom: 22px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+        }
+
+
+        .form-title-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 10px;
+
+            background: #eff6ff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 21px;
+        }
+
+
+        .form-title h2 {
+            margin: 0;
+
+            font-size: 20px;
+
+            color: #1e293b;
+        }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .patient-form {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .patient-form label {
+            margin-top: 12px;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        .patient-form input,
+        .patient-form select,
+        .patient-form textarea {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            color: #1e293b;
+
+            font-size: 15px;
+
+            font-family: Arial, sans-serif;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        .patient-form input:focus,
+        .patient-form select:focus,
+        .patient-form textarea:focus {
+
+            background: white;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.10);
+        }
+
+
+        .patient-form input::placeholder,
+        .patient-form textarea::placeholder {
+
+            color: #94a3b8;
+        }
+
+
+        .patient-form textarea {
+
+            min-height: 120px;
+
+            resize: vertical;
+        }
+
+
+        /* =========================================
+           INPUT ICON LABEL
+        ========================================= */
+
+        .label-icon {
+            margin-right: 5px;
+        }
+
+
+        /* =========================================
+           REGISTER BUTTON
+        ========================================= */
+
+        .register-button {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            box-shadow:
+                0 5px 15px
+                rgba(37, 99, 235, 0.20);
+        }
+
+
+        .register-button:hover {
+
+            background: #1d4ed8;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .register-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================
+           INFO BOX
+        ========================================= */
+
+        .info-box {
+
+            margin-top: 25px;
+
+            padding: 17px;
+
+            border-radius: 11px;
+
+            background: #eff6ff;
+
+            border-left:
+                5px solid #2563eb;
+
+            color: #475569;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        .info-box strong {
+
+            color: #1e40af;
+        }
+
+
+        /* =========================================
+           IMPORTANT BOX
+        ========================================= */
+
+        .important-box {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #fff7ed;
+
+            border-left:
+                5px solid #f97316;
+
+            color: #7c2d12;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+        ========================================= */
+
+        .navigation {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 25px;
+        }
+
+
+        .nav-button {
+
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+
+        .patients-button {
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .patients-button:hover {
+
+            background: #bfdbfe;
+        }
+
+
+        .dashboard-button {
+
+            background: #e2e8f0;
+
+            color: #334155;
+        }
+
+
+        .dashboard-button:hover {
+
+            background: #cbd5e1;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .page-footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 650px) {
+
+            .patient-container {
+
+                margin: 20px auto;
+
+                padding: 15px;
+            }
+
+
+            .patient-header {
+
+                padding: 25px 20px;
+            }
+
+
+            .patient-card {
+
+                padding: 22px;
+            }
+
+
+            .patient-header h1 {
+
+                font-size: 24px;
+            }
+
+
+            .form-row {
+
+                grid-template-columns: 1fr;
+
+                gap: 0;
+            }
+
+
+            .navigation {
+
+                flex-direction: column;
+            }
+
+
+            .nav-button {
+
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!--                  MAIN CONTAINER                   -->
+<!-- ================================================= -->
+
+<div class="patient-container">
+
+
+    <!-- =============================================
+         HEADER
+    ============================================== -->
+
+    <div class="patient-header">
+
+
+        <div class="patient-icon">
+
+            👤
+
+        </div>
+
+
+        <h1>
+
+            Patient Registration
+
+        </h1>
+
+
+        <p>
+
+            Register a new patient in the
+            Smart Hospital Management System
+
+        </p>
+
+
+    </div>
+
+
+
+    <!-- =============================================
+         FORM CARD
+    ============================================== -->
+
+    <div class="patient-card">
+
+
+        <div class="form-title">
+
+
+            <div class="form-title-icon">
+
+                📝
+
+            </div>
+
+
+            <h2>
+
+                Enter Patient Details
+
+            </h2>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             FORM
+        ========================================== -->
+
+        <form
+            method="POST"
+            class="patient-form"
+            onsubmit="return validatePatientForm();">
+
+
+            <!-- =====================================
+                 NAME + AGE
+            ====================================== -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+
+                    <label for="name">
+
+                        <span class="label-icon">
+                            👤
+                        </span>
+
+                        Patient Name
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter full patient name"
+                        maxlength="100"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="form-group">
+
+
+                    <label for="age">
+
+                        <span class="label-icon">
+                            🎂
+                        </span>
+
+                        Age
+
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        placeholder="Enter age"
+                        min="0"
+                        max="120"
+                        required>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 GENDER + PHONE
+            ====================================== -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+
+                    <label for="gender">
+
+                        <span class="label-icon">
+                            ⚧️
+                        </span>
+
+                        Gender
+
+                    </label>
+
+
+                    <select
+                        id="gender"
+                        name="gender"
+                        required>
+
+
+                        <option value="">
+
+                            -- Select Gender --
+
+                        </option>
+
+
+                        <option value="Male">
+
+                            👨 Male
+
+                        </option>
+
+
+                        <option value="Female">
+
+                            👩 Female
+
+                        </option>
+
+
+                        <option value="Other">
+
+                            ⚧️ Other
+
+                        </option>
+
+
+                    </select>
+
+
+                </div>
+
+
+
+                <div class="form-group">
+
+
+                    <label for="phone">
+
+                        <span class="label-icon">
+                            📞
+                        </span>
+
+                        Phone Number
+
+                    </label>
+
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter 10-digit phone number"
+                        maxlength="10"
+                        pattern="[0-9]{10}"
+                        required>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 EMAIL
+            ====================================== -->
+
+            <label for="email">
+
+                <span class="label-icon">
+                    📧
+                </span>
+
+                Email Address
+
+            </label>
+
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="patient@example.com"
+                maxlength="150">
+
+
+
+            <!-- =====================================
+                 ADDRESS
+            ====================================== -->
+
+            <label for="address">
+
+                <span class="label-icon">
+                    🏠
+                </span>
+
+                Address
+
+            </label>
+
+
+            <textarea
+                id="address"
+                name="address"
+                placeholder="Enter complete patient address"
+                maxlength="500"
+                required></textarea>
+
+
+
+            <!-- =====================================
+                 REGISTER BUTTON
+            ====================================== -->
+
+            <button
+                type="submit"
+                class="register-button"
+                id="registerButton">
+
+                ➕ Register Patient
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =========================================
+             INFORMATION BOX
+        ========================================== -->
+
+        <div class="info-box">
+
+
+            💡 <strong>
+                Patient Registration Tips
+            </strong>
+
+
+            <br>
+
+
+            • Enter the patient's full name correctly.
+
+
+            <br>
+
+
+            • Age should be between 0 and 120.
+
+
+            <br>
+
+
+            • Phone number must contain exactly
+            10 digits.
+
+
+            <br>
+
+
+            • Provide a valid email address
+            when available.
+
+
+            <br>
+
+
+            • Enter the patient's complete address.
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             IMPORTANT MESSAGE
+        ========================================== -->
+
+        <div class="important-box">
+
+
+            ⚠️ <strong>
+                Important:
+            </strong>
+
+
+            Please verify all patient information
+            before registration. Incorrect information
+            may affect appointments, medical history,
+            prescriptions and billing records.
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =============================================
+         NAVIGATION
+    ============================================== -->
+
+    <div class="navigation">
+
+
+        <a
+            href="{{ url_for('patients') }}"
+            class="nav-button patients-button">
+
+            👥 View Patients
+
+        </a>
+
+
+        <a
+            href="/"
+            class="nav-button dashboard-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!--                     FOOTER                        -->
+<!-- ================================================= -->
+
+<footer class="page-footer">
+
+
+    🏥 Smart Hospital Management System
+
+
+    <br><br>
+
+
+    AI-Based Healthcare Management Platform
+
+
+    <br><br>
+
+
+    © 2026 Smart Hospital
+
+
+</footer>
+
+
+
+<!-- ================================================= -->
+<!--                  JAVASCRIPT                      -->
+<!-- ================================================= -->
+
+<script>
+
+
+/* =========================================
+   PHONE NUMBER
+========================================= */
+
+const phoneInput =
+    document.getElementById("phone");
+
+
+phoneInput.addEventListener(
+    "input",
+    function () {
+
+        this.value =
+            this.value.replace(
+                /[^0-9]/g,
+                ""
+            );
+
+    }
+);
+
+
+
+/* =========================================
+   PATIENT NAME
+========================================= */
+
+const nameInput =
+    document.getElementById("name");
+
+
+nameInput.addEventListener(
+    "input",
+    function () {
+
+        this.value =
+            this.value.replace(
+                /[^a-zA-Z\s.]/g,
+                ""
+            );
+
+    }
+);
+
+
+
+/* =========================================
+   AGE VALIDATION
+========================================= */
+
+const ageInput =
+    document.getElementById("age");
+
+
+ageInput.addEventListener(
+    "input",
+    function () {
+
+        let age =
+            parseInt(this.value);
+
+        if (age > 120) {
+
+            this.value = 120;
+
+        }
+
+        if (age < 0) {
+
+            this.value = 0;
+
+        }
+
+    }
+);
+
+
+
+/* =========================================
+   FORM VALIDATION
+========================================= */
+
+function validatePatientForm() {
+
+
+    const name =
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
+
+    const age =
+        document
+        .getElementById("age")
+        .value;
+
+
+    const gender =
+        document
+        .getElementById("gender")
+        .value;
+
+
+    const phone =
+        document
+        .getElementById("phone")
+        .value;
+
+
+    const address =
+        document
+        .getElementById("address")
+        .value
+        .trim();
+
+
+    /* NAME */
+
+    if (name.length < 2) {
+
+        alert(
+            "Please enter a valid patient name."
+        );
+
+        return false;
+
+    }
+
+
+    /* AGE */
+
+    if (
+        age === "" ||
+        age < 0 ||
+        age > 120
+    ) {
+
+        alert(
+            "Please enter a valid age between 0 and 120."
+        );
+
+        return false;
+
+    }
+
+
+    /* GENDER */
+
+    if (gender === "") {
+
+        alert(
+            "Please select the patient's gender."
+        );
+
+        return false;
+
+    }
+
+
+    /* PHONE */
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+
+        alert(
+            "Phone number must contain exactly 10 digits."
+        );
+
+        return false;
+
+    }
+
+
+    /* ADDRESS */
+
+    if (address.length < 5) {
+
+        alert(
+            "Please enter a valid patient address."
+        );
+
+        return false;
+
+    }
+
+
+    /* LOADING */
+
+    const button =
+        document.getElementById(
+            "registerButton"
+        );
+
+
+    button.innerHTML =
+        "⏳ Registering Patient...";
+
+
+    button.style.opacity =
+        "0.75";
+
+
+    button.style.pointerEvents =
+        "none";
+
+
+    return true;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

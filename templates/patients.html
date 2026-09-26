@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Patients List - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .patients-container {
+            max-width: 1250px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .patient-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: #dbeafe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 28px;
+        }
+
+        .page-title p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .patient-count {
+            background: #eff6ff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .patient-count-number {
+            display: block;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .patient-count-label {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* SEARCH */
+
+        .search-box {
+            margin-top: 25px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 46px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: #f8fafc;
+        }
+
+        .search-box input:focus {
+            background: white;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 17px;
+            top: 13px;
+            font-size: 18px;
+        }
+
+        /* TABLE */
+
+        .table-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1150px;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 16px 14px;
+            text-align: left;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ID */
+
+        .patient-id {
+            font-weight: bold;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 6px 9px;
+            border-radius: 7px;
+            display: inline-block;
+        }
+
+        /* NAME */
+
+        .patient-name {
+            font-weight: bold;
+            color: #1e293b;
+            white-space: nowrap;
+        }
+
+        /* AGE */
+
+        .age-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* GENDER */
+
+        .gender-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .male {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .female {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .other {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        /* PHONE */
+
+        .phone-text {
+            white-space: nowrap;
+        }
+
+        /* EMAIL */
+
+        .email-text {
+            color: #2563eb;
+        }
+
+        /* ADDRESS */
+
+        .address-text {
+            max-width: 220px;
+            line-height: 1.4;
+        }
+
+        /* DELETE BUTTON */
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 8px 13px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* SEARCH RESULT */
+
+        .no-search-result {
+            display: none;
+            text-align: center;
+            padding: 45px 20px;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .no-search-result-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        /* EMPTY */
+
+        .empty-box {
+            text-align: center;
+            padding: 65px 20px;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .empty-box h2 {
+            margin: 0;
+            color: #334155;
+        }
+
+        .empty-box p {
+            color: #64748b;
+            margin: 10px 0 25px;
+        }
+
+        /* BUTTONS */
+
+        .button-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .register-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .register-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .history-button {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .history-button:hover {
+            background: #bbf7d0;
+        }
+
+        .home-button {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .home-button:hover {
+            background: #cbd5e1;
+        }
+
+        /* FOOTER */
+
+        .page-footer {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .patients-container {
+                margin: 20px;
+                padding: 0;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .patient-count {
+                width: 100%;
+            }
+
+            .page-title h1 {
+                font-size: 23px;
+            }
+
+            .button-area {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="patients-container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div class="header-top">
+
+
+            <div class="page-title">
+
+                <div class="patient-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <h1>
+                        Registered Patients
+                    </h1>
+
+                    <p>
+                        Manage and view all registered patients in the hospital
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="patient-count">
+
+                <span class="patient-count-number">
+                    {{ patients|length }}
+                </span>
+
+                <span class="patient-count-label">
+                    Total Patients
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="patientSearch"
+                placeholder="Search patient, ID, gender, phone, email or address..."
+                onkeyup="searchPatients()">
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+
+        {% if patients %}
+
+
+        <div class="table-wrapper">
+
+            <table id="patientTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Patient</th>
+
+                        <th>Age</th>
+
+                        <th>Gender</th>
+
+                        <th>Phone</th>
+
+                        <th>Email</th>
+
+                        <th>Address</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for patient in patients %}
+
+                    <tr>
+
+
+                        <!-- ID -->
+
+                        <td>
+
+                            <span class="patient-id">
+                                #{{ patient.patient_id }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- NAME -->
+
+                        <td>
+
+                            <span class="patient-name">
+                                👤 {{ patient.name }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- AGE -->
+
+                        <td>
+
+                            <span class="age-badge">
+                                🎂 {{ patient.age }} years
+                            </span>
+
+                        </td>
+
+
+                        <!-- GENDER -->
+
+                        <td>
+
+                            {% if patient.gender == "Male" %}
+
+                                <span class="gender-badge male">
+                                    👨 Male
+                                </span>
+
+                            {% elif patient.gender == "Female" %}
+
+                                <span class="gender-badge female">
+                                    👩 Female
+                                </span>
+
+                            {% else %}
+
+                                <span class="gender-badge other">
+                                    ⚧️ {{ patient.gender }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- PHONE -->
+
+                        <td>
+
+                            <span class="phone-text">
+                                📞 {{ patient.phone }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- EMAIL -->
+
+                        <td>
+
+                            {% if patient.email %}
+
+                                <span class="email-text">
+                                    📧 {{ patient.email }}
+                                </span>
+
+                            {% else %}
+
+                                <span style="color:#94a3b8;">
+                                    Not provided
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ADDRESS -->
+
+                        <td>
+
+                            <div class="address-text">
+                                🏠 {{ patient.address }}
+                            </div>
+
+                        </td>
+
+
+                        <!-- DELETE -->
+
+                        <td>
+
+                            <form
+                                action="{{ url_for('delete_patient', patient_id=patient.patient_id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete {{ patient.name }}?');">
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn">
+
+                                    🗑️ Delete
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- NO SEARCH RESULT -->
+
+        <div
+            id="noSearchResult"
+            class="no-search-result">
+
+            <div class="no-search-result-icon">
+                🔍
+            </div>
+
+            <strong>
+                No Patients Found
+            </strong>
+
+            <p>
+                No patient matches your search.
+                Try another name, ID, phone or email.
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+                👤
+            </div>
+
+            <h2>
+                No Patients Registered
+            </h2>
+
+            <p>
+                There are currently no patients
+                in the hospital system.
+            </p>
+
+            <a
+                href="{{ url_for('patient') }}"
+                class="action-button register-button">
+
+                ➕ Register First Patient
+
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="button-area">
+
+
+        <a
+            href="{{ url_for('patient') }}"
+            class="action-button register-button">
+
+            ➕ Register Patient
+
+        </a>
+
+
+        <a
+            href="{{ url_for('medical_history') }}"
+            class="action-button history-button">
+
+            📋 Medical History
+
+        </a>
+
+
+        <a
+            href="/"
+            class="action-button home-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer class="page-footer">
+
+    🏥 Smart Hospital Management System
+
+    <br><br>
+
+    AI-Based Healthcare Management Platform
+
+    <br><br>
+
+    © 2026 Smart Hospital
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+function searchPatients() {
+
+    const input =
+        document.getElementById("patientSearch");
+
+    const filter =
+        input.value.toLowerCase().trim();
+
+    const table =
+        document.getElementById("patientTable");
+
+    const noResult =
+        document.getElementById("noSearchResult");
+
+    if (!table) {
+        return;
+    }
+
+    const rows =
+        table
+        .getElementsByTagName("tbody")[0]
+        .getElementsByTagName("tr");
+
+    let visibleRows = 0;
+
+
+    for (let i = 0; i < rows.length; i++) {
+
+        const rowText =
+            rows[i].innerText.toLowerCase();
+
+        if (rowText.includes(filter)) {
+
+            rows[i].style.display = "";
+
+            visibleRows++;
+
+        } else {
+
+            rows[i].style.display = "none";
+
+        }
+
+    }
+
+
+    if (visibleRows === 0 && filter !== "") {
+
+        noResult.style.display = "block";
+
+    } else {
+
+        noResult.style.display = "none";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

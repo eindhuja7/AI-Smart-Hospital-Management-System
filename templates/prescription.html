@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Prescription Management - Smart Hospital</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================= */
+
+        .prescription-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 30px;
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .prescription-header {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 7px 25px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 25px;
+        }
+
+
+        .prescription-icon {
+            width: 78px;
+            height: 78px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 22px;
+
+            background: #dcfce7;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 40px;
+        }
+
+
+        .prescription-header h1 {
+            margin: 0;
+
+            font-size: 29px;
+
+            color: #1e3a8a;
+        }
+
+
+        .prescription-header p {
+            margin: 9px 0 0;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           FORM CARD
+        ========================================= */
+
+        .prescription-card {
+            background: white;
+
+            padding: 32px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 7px 25px rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =========================================
+           FORM TITLE
+        ========================================= */
+
+        .form-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding-bottom: 18px;
+
+            margin-bottom: 22px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+        }
+
+
+        .form-title-icon {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 10px;
+
+            background: #dcfce7;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 22px;
+        }
+
+
+        .form-title h2 {
+            margin: 0;
+
+            font-size: 20px;
+
+            color: #1e293b;
+        }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .prescription-form {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .prescription-form label {
+            margin-top: 12px;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        .prescription-form input,
+        .prescription-form select {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            color: #1e293b;
+
+            font-size: 15px;
+
+            font-family: Arial, sans-serif;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        .prescription-form input:focus,
+        .prescription-form select:focus {
+
+            background: white;
+
+            border-color: #16a34a;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(22, 163, 74, 0.10);
+        }
+
+
+        .prescription-form input::placeholder {
+
+            color: #94a3b8;
+        }
+
+
+        /* =========================================
+           SELECTED PATIENT / DOCTOR
+        ========================================= */
+
+        .patient-select {
+
+            background: #eff6ff !important;
+
+            border-color:
+                #93c5fd !important;
+        }
+
+
+        .doctor-select {
+
+            background: #f0fdf4 !important;
+
+            border-color:
+                #86efac !important;
+        }
+
+
+        /* =========================================
+           SAVE BUTTON
+        ========================================= */
+
+        .save-button {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #16a34a;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            box-shadow:
+                0 5px 15px
+                rgba(22, 163, 74, 0.20);
+        }
+
+
+        .save-button:hover {
+
+            background: #15803d;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .save-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================
+           INFORMATION BOX
+        ========================================= */
+
+        .info-box {
+
+            margin-top: 25px;
+
+            padding: 17px;
+
+            border-radius: 11px;
+
+            background: #eff6ff;
+
+            border-left:
+                5px solid #2563eb;
+
+            color: #475569;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        .info-box strong {
+
+            color: #1e40af;
+        }
+
+
+        /* =========================================
+           WARNING BOX
+        ========================================= */
+
+        .warning-box {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #fff7ed;
+
+            border-left:
+                5px solid #f97316;
+
+            color: #7c2d12;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================
+           PRESCRIPTION NOTE
+        ========================================= */
+
+        .prescription-note {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #f0fdf4;
+
+            border-left:
+                5px solid #22c55e;
+
+            color: #166534;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+        ========================================= */
+
+        .navigation {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 25px;
+        }
+
+
+        .nav-button {
+
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+
+        .patients-button {
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .patients-button:hover {
+
+            background: #bfdbfe;
+        }
+
+
+        .doctors-button {
+
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+
+        .doctors-button:hover {
+
+            background: #bbf7d0;
+        }
+
+
+        .dashboard-button {
+
+            background: #e2e8f0;
+
+            color: #334155;
+        }
+
+
+        .dashboard-button:hover {
+
+            background: #cbd5e1;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .page-footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 650px) {
+
+            .prescription-container {
+
+                margin: 20px auto;
+
+                padding: 15px;
+            }
+
+
+            .prescription-header {
+
+                padding: 25px 20px;
+            }
+
+
+            .prescription-card {
+
+                padding: 22px;
+            }
+
+
+            .prescription-header h1 {
+
+                font-size: 24px;
+            }
+
+
+            .form-row {
+
+                grid-template-columns: 1fr;
+
+                gap: 0;
+            }
+
+
+            .navigation {
+
+                flex-direction: column;
+            }
+
+
+            .nav-button {
+
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!--                  MAIN CONTAINER                   -->
+<!-- ================================================= -->
+
+<div class="prescription-container">
+
+
+    <!-- =============================================
+         HEADER
+    ============================================== -->
+
+    <div class="prescription-header">
+
+
+        <div class="prescription-icon">
+
+            💊
+
+        </div>
+
+
+        <h1>
+
+            Prescription Management
+
+        </h1>
+
+
+        <p>
+
+            Create and save prescription details
+            for hospital patients
+
+        </p>
+
+
+    </div>
+
+
+
+    <!-- =============================================
+         FORM CARD
+    ============================================== -->
+
+    <div class="prescription-card">
+
+
+        <div class="form-title">
+
+
+            <div class="form-title-icon">
+
+                💊
+
+            </div>
+
+
+            <h2>
+
+                Add Prescription Details
+
+            </h2>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             FORM
+        ========================================== -->
+
+        <form
+            method="POST"
+            class="prescription-form"
+            onsubmit="return validatePrescriptionForm();">
+
+
+            <!-- =====================================
+                 PATIENT + DOCTOR
+            ====================================== -->
+
+            <div class="form-row">
+
+
+                <!-- PATIENT -->
+
+                <div class="form-group">
+
+
+                    <label for="patient_id">
+
+                        👤 Select Patient
+
+                    </label>
+
+
+                    <select
+                        name="patient_id"
+                        id="patient_id"
+                        class="patient-select"
+                        required>
+
+
+                        <option value="">
+
+                            -- Select Patient --
+
+                        </option>
+
+
+                        {% for patient in patients %}
+
+
+                        <option
+                            value="{{ patient.patient_id }}">
+
+                            #{{ patient.patient_id }}
+                            -
+                            {{ patient.name }}
+
+                        </option>
+
+
+                        {% endfor %}
+
+
+                    </select>
+
+
+                </div>
+
+
+
+                <!-- DOCTOR -->
+
+                <div class="form-group">
+
+
+                    <label for="doctor_id">
+
+                        👨‍⚕️ Select Doctor
+
+                    </label>
+
+
+                    <select
+                        name="doctor_id"
+                        id="doctor_id"
+                        class="doctor-select"
+                        required>
+
+
+                        <option value="">
+
+                            -- Select Doctor --
+
+                        </option>
+
+
+                        {% for doctor in doctors %}
+
+
+                        <option
+                            value="{{ doctor.doctor_id }}">
+
+                            Dr. {{ doctor.name }}
+                            -
+                            {{ doctor.specialization }}
+
+                        </option>
+
+
+                        {% endfor %}
+
+
+                    </select>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 MEDICINE
+            ====================================== -->
+
+            <label for="medicine">
+
+                💊 Medicine Name
+
+            </label>
+
+
+            <input
+                type="text"
+                id="medicine"
+                name="medicine"
+                placeholder="Example: Paracetamol 500mg"
+                maxlength="255"
+                required>
+
+
+
+            <!-- =====================================
+                 DOSAGE + DURATION
+            ====================================== -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+
+                    <label for="dosage">
+
+                        💉 Dosage
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="dosage"
+                        name="dosage"
+                        placeholder="Example: 1 tablet twice a day"
+                        maxlength="100"
+                        required>
+
+
+                </div>
+
+
+
+                <div class="form-group">
+
+
+                    <label for="duration">
+
+                        ⏳ Duration
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="duration"
+                        name="duration"
+                        placeholder="Example: 5 days"
+                        maxlength="100"
+                        required>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 DATE
+            ====================================== -->
+
+            <label for="prescription_date">
+
+                📅 Prescription Date
+
+            </label>
+
+
+            <input
+                type="date"
+                id="prescription_date"
+                name="prescription_date"
+                required>
+
+
+
+            <!-- =====================================
+                 SAVE BUTTON
+            ====================================== -->
+
+            <button
+                type="submit"
+                class="save-button"
+                id="saveButton">
+
+                💾 Save Prescription
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =========================================
+             INFO BOX
+        ========================================== -->
+
+        <div class="info-box">
+
+
+            💡 <strong>
+                Prescription Tips
+            </strong>
+
+
+            <br>
+
+
+            • Select the correct patient and doctor.
+
+
+            <br>
+
+
+            • Enter the complete medicine name.
+
+
+            <br>
+
+
+            • Clearly specify the dosage.
+
+
+            <br>
+
+
+            • Mention how long the medicine
+            should be taken.
+
+
+            <br>
+
+
+            • Verify the prescription date
+            before saving.
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             MEDICAL SAFETY
+        ========================================== -->
+
+        <div class="warning-box">
+
+
+            ⚠️ <strong>
+                Important:
+            </strong>
+
+
+            Prescription information should be entered
+            only by authorized healthcare professionals.
+            Always verify medicine, dosage and duration
+            before saving the record.
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             SYSTEM NOTE
+        ========================================== -->
+
+        <div class="prescription-note">
+
+
+            ✓ <strong>
+                Record Management:
+            </strong>
+
+
+            Saved prescriptions are linked to the
+            selected patient and doctor in the
+            hospital database.
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =============================================
+         NAVIGATION
+    ============================================== -->
+
+    <div class="navigation">
+
+
+        <a
+            href="{{ url_for('patients') }}"
+            class="nav-button patients-button">
+
+            👥 View Patients
+
+        </a>
+
+
+        <a
+            href="{{ url_for('doctors') }}"
+            class="nav-button doctors-button">
+
+            👨‍⚕️ View Doctors
+
+        </a>
+
+
+        <a
+            href="/"
+            class="nav-button dashboard-button">
+
+            🏠 Back to Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!--                     FOOTER                        -->
+<!-- ================================================= -->
+
+<footer class="page-footer">
+
+
+    🏥 Smart Hospital Management System
+
+
+    <br><br>
+
+
+    AI-Based Healthcare Management Platform
+
+
+    <br><br>
+
+
+    © 2026 Smart Hospital
+
+
+</footer>
+
+
+
+<!-- ================================================= -->
+<!--                  JAVASCRIPT                      -->
+<!-- ================================================= -->
+
+<script>
+
+
+/* =========================================
+   DEFAULT DATE
+========================================= */
+
+const dateInput =
+    document.getElementById(
+        "prescription_date"
+    );
+
+
+const today =
+    new Date();
+
+
+const year =
+    today.getFullYear();
+
+
+const month =
+    String(
+        today.getMonth() + 1
+    ).padStart(2, "0");
+
+
+const day =
+    String(
+        today.getDate()
+    ).padStart(2, "0");
+
+
+const currentDate =
+    `${year}-${month}-${day}`;
+
+
+dateInput.value =
+    currentDate;
+
+
+dateInput.setAttribute(
+    "max",
+    currentDate
+);
+
+
+
+/* =========================================
+   FORM VALIDATION
+========================================= */
+
+function validatePrescriptionForm() {
+
+
+    const patient =
+        document.getElementById(
+            "patient_id"
+        ).value;
+
+
+    const doctor =
+        document.getElementById(
+            "doctor_id"
+        ).value;
+
+
+    const medicine =
+        document.getElementById(
+            "medicine"
+        ).value.trim();
+
+
+    const dosage =
+        document.getElementById(
+            "dosage"
+        ).value.trim();
+
+
+    const duration =
+        document.getElementById(
+            "duration"
+        ).value.trim();
+
+
+    const date =
+        document.getElementById(
+            "prescription_date"
+        ).value;
+
+
+    /* PATIENT */
+
+    if (patient === "") {
+
+        alert(
+            "Please select a patient."
+        );
+
+        return false;
+
+    }
+
+
+    /* DOCTOR */
+
+    if (doctor === "") {
+
+        alert(
+            "Please select a doctor."
+        );
+
+        return false;
+
+    }
+
+
+    /* MEDICINE */
+
+    if (medicine.length < 2) {
+
+        alert(
+            "Please enter a valid medicine name."
+        );
+
+        return false;
+
+    }
+
+
+    /* DOSAGE */
+
+    if (dosage.length < 2) {
+
+        alert(
+            "Please enter the medicine dosage."
+        );
+
+        return false;
+
+    }
+
+
+    /* DURATION */
+
+    if (duration.length < 1) {
+
+        alert(
+            "Please enter the medicine duration."
+        );
+
+        return false;
+
+    }
+
+
+    /* DATE */
+
+    if (date === "") {
+
+        alert(
+            "Please select prescription date."
+        );
+
+        return false;
+
+    }
+
+
+    /* LOADING */
+
+    const button =
+        document.getElementById(
+            "saveButton"
+        );
+
+
+    button.innerHTML =
+        "⏳ Saving Prescription...";
+
+
+    button.style.opacity =
+        "0.75";
+
+
+    button.style.pointerEvents =
+        "none";
+
+
+    return true;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
