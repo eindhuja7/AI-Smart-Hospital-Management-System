@@ -9,10 +9,12 @@ import os
 
 load_dotenv()
 
-
 app = Flask(__name__)
 
-app.secret_key = "smart_hospital_secret_key"
+app.secret_key = os.getenv(
+    "FLASK_SECRET_KEY",
+    "smart_hospital_secret_key"
+)
 
 
 # =========================================================
@@ -30,7 +32,7 @@ def get_db_connection():
 
 
 # =========================================================
-# LOGIN REQUIRED CHECK
+# LOGIN REQUIRED
 # =========================================================
 
 def login_required():
@@ -42,7 +44,7 @@ def login_required():
 
 
 # =========================================================
-# CREATE NOTIFICATIONS
+# NOTIFICATIONS
 # =========================================================
 
 def get_notifications():
@@ -829,6 +831,19 @@ def doctor_success():
 
             <br><br><br>
 
+            <a href="/doctors"
+               style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-weight:bold;
+               ">
+
+                👨‍⚕️ View Doctors
+
+            </a>
+
+            <br><br>
+
             <a href="/"
                style="
                     text-decoration:none;
@@ -1063,6 +1078,19 @@ def appointment_success():
             </a>
 
             <br><br><br>
+
+            <a href="/appointments"
+               style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-weight:bold;
+               ">
+
+                📋 View Appointments
+
+            </a>
+
+            <br><br>
 
             <a href="/"
                style="
@@ -1513,7 +1541,6 @@ def ai_prediction():
         )
 
     prediction = None
-
     selected_patient = None
 
     db = get_db_connection()
@@ -1561,7 +1588,9 @@ def ai_prediction():
 
             if patient_data:
 
-                selected_patient = patient_data["name"]
+                selected_patient = patient_data[
+                    "name"
+                ]
 
         # BASIC PREDICTION LOGIC
 
